@@ -1,0 +1,1034 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<title>Telegram Marketplace</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+:root {
+    --bg:#f4f7fb;
+    --card:#ffffff;
+    --text:#172033;
+    --muted:#718096;
+    --primary:#168acd;
+    --primary-dark:#0873b2;
+    --border:#e4ebf2;
+    --shadow:0 12px 35px rgba(20,45,75,.10);
+}
+
+* {
+    box-sizing:border-box;
+}
+
+body {
+    margin:0;
+    color:var(--text);
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    background:
+        radial-gradient(
+            circle at 10% 0%,
+            rgba(22,138,205,.17),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 90% 10%,
+            rgba(99,102,241,.11),
+            transparent 30%
+        ),
+        linear-gradient(
+            180deg,
+            #eef6fc 0%,
+            var(--bg) 38%,
+            #f8fafc 100%
+        );
+
+    min-height:100vh;
+}
+
+header {
+    padding:
+        calc(22px + env(safe-area-inset-top))
+        18px
+        28px;
+
+    color:white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0873b2,
+            #168acd 48%,
+            #4f8fe8
+        );
+
+    box-shadow:
+        0 10px 35px rgba(8,115,178,.22);
+}
+
+.brand {
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo {
+    width:48px;
+    height:48px;
+    display:grid;
+    place-items:center;
+    border-radius:15px;
+    background:rgba(255,255,255,.18);
+    font-size:25px;
+}
+
+header h1 {
+    margin:0;
+    font-size:22px;
+}
+
+header p {
+    margin:4px 0 0;
+    color:rgba(255,255,255,.82);
+    font-size:13px;
+}
+
+main {
+    max-width:900px;
+    margin:auto;
+    padding:16px 14px 40px;
+}
+
+.toolbar {
+    display:flex;
+    gap:8px;
+    margin-bottom:16px;
+    padding:5px;
+    background:rgba(255,255,255,.86);
+    border:1px solid rgba(255,255,255,.8);
+    border-radius:16px;
+    box-shadow:var(--shadow);
+}
+
+.nav-button {
+    flex:1;
+    border:0;
+    border-radius:12px;
+    padding:11px 8px;
+    background:transparent;
+    color:var(--muted);
+    font-weight:700;
+}
+
+.nav-button.active {
+    color:white;
+    background:var(--primary);
+}
+
+.grid {
+    display:grid;
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+    gap:13px;
+}
+
+.card {
+    overflow:hidden;
+    background:rgba(255,255,255,.95);
+    border:1px solid var(--border);
+    border-radius:19px;
+    box-shadow:var(--shadow);
+}
+
+.product-image,
+.image-placeholder {
+    width:100%;
+    aspect-ratio:1/.82;
+}
+
+.product-image {
+    display:block;
+    object-fit:cover;
+}
+
+.image-placeholder {
+    display:grid;
+    place-items:center;
+    background:
+        linear-gradient(
+            135deg,
+            #e9f3f9,
+            #dce8f2
+        );
+    font-size:38px;
+}
+
+.product-body {
+    padding:13px;
+}
+
+.product-body h3 {
+    margin:0 0 5px;
+    font-size:16px;
+}
+
+.description {
+    margin:0 0 10px;
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.45;
+    min-height:34px;
+}
+
+.price {
+    margin-bottom:7px;
+    font-size:18px;
+    font-weight:800;
+}
+
+.seller {
+    margin-bottom:11px;
+    color:var(--muted);
+    font-size:12px;
+}
+
+.verified {
+    display:inline-flex;
+    margin-left:4px;
+    padding:3px 7px;
+    border-radius:20px;
+    background:#e7f8ef;
+    color:#16834c;
+    font-size:10px;
+    font-weight:800;
+}
+
+.full-button,
+.primary {
+    width:100%;
+    border:0;
+    border-radius:11px;
+    padding:11px;
+    background:var(--primary);
+    color:white;
+    font-weight:800;
+}
+
+.form-card {
+    padding:17px;
+}
+
+.form-card h2 {
+    margin-top:0;
+}
+
+label {
+    display:block;
+    margin:13px 0 6px;
+    font-size:13px;
+    font-weight:700;
+}
+
+input,
+textarea,
+select {
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:12px;
+    background:#fff;
+    color:var(--text);
+    font:inherit;
+    outline:none;
+}
+
+textarea {
+    min-height:100px;
+    resize:vertical;
+}
+
+.currency-wrap {
+    position:relative;
+}
+
+.currency-search {
+    margin-bottom:7px;
+}
+
+.file-box {
+    border:2px dashed #cbdbe7;
+    border-radius:15px;
+    padding:15px;
+    text-align:center;
+    background:#f8fbfd;
+}
+
+.preview {
+    display:none;
+    width:100%;
+    max-height:240px;
+    object-fit:cover;
+    border-radius:13px;
+    margin-top:10px;
+}
+
+.form-actions {
+    display:flex;
+    gap:9px;
+    margin-top:17px;
+}
+
+.secondary {
+    flex:1;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:11px;
+    background:white;
+    font-weight:700;
+}
+
+.form-actions .primary {
+    flex:2;
+}
+
+.loading,
+.empty,
+.error {
+    padding:30px 18px;
+    text-align:center;
+    background:rgba(255,255,255,.9);
+    border-radius:18px;
+    color:var(--muted);
+    box-shadow:var(--shadow);
+}
+
+.error {
+    color:#b42318;
+    background:#fff5f4;
+}
+
+@media(min-width:700px) {
+    .grid {
+        grid-template-columns:
+            repeat(3,minmax(0,1fr));
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="brand">
+        <div class="logo">🛍️</div>
+
+        <div>
+            <h1>Telegram Marketplace</h1>
+            <p>Buy and sell internationally</p>
+        </div>
+    </div>
+</header>
+
+<main>
+
+<div class="toolbar">
+
+    <button
+        class="nav-button active"
+        onclick="showProducts()">
+        Marketplace
+    </button>
+
+    <button
+        class="nav-button"
+        onclick="showOrders()">
+        My Orders
+    </button>
+
+    <button
+        class="nav-button"
+        onclick="showAddProduct()">
+        Sell
+    </button>
+
+</div>
+
+<div id="app">
+    <div class="loading">
+        Loading marketplace...
+    </div>
+</div>
+
+</main>
+
+<script>
+const tg = window.Telegram && window.Telegram.WebApp
+    ? window.Telegram.WebApp
+    : null;
+
+if (tg) {
+    tg.ready();
+    tg.expand();
+}
+
+const app = document.getElementById("app");
+
+function esc(value) {
+    const d = document.createElement("div");
+    d.textContent = value ?? "";
+    return d.innerHTML;
+}
+
+function initData() {
+    return tg ? tg.initData : "";
+}
+
+function setActive(index) {
+    document.querySelectorAll(".nav-button")
+        .forEach((button, i) => {
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        });
+}
+
+async function showProducts() {
+    setActive(0);
+
+    app.innerHTML =
+        '<div class="loading">Loading marketplace...</div>';
+
+    try {
+        const response =
+            await fetch("/miniapp/products/");
+
+        const data = await response.json();
+
+        if (!data.products ||
+            !data.products.length) {
+
+            app.innerHTML = `
+                <div class="empty">
+                    <div style="font-size:40px">🛍️</div>
+                    <h3>No products yet</h3>
+                    <p>Be the first vendor to list something.</p>
+                </div>`;
+
+            return;
+        }
+
+        app.innerHTML = `
+            <h2 style="margin:8px 2px 12px">
+                Marketplace
+            </h2>
+
+            <div class="grid">
+                ${data.products
+                    .map(productCard)
+                    .join("")}
+            </div>
+        `;
+
+    } catch (error) {
+        app.innerHTML =
+            '<div class="error">Could not load products.</div>';
+    }
+}
+
+function productCard(p) {
+    const image = p.image
+        ? `
+            <img
+                class="product-image"
+                src="${esc(p.image)}"
+                alt="${esc(p.name)}"
+                loading="lazy">
+          `
+        : `
+            <div class="image-placeholder">
+                🛍️
+            </div>
+          `;
+
+    return `
+        <article class="card">
+
+            ${image}
+
+            <div class="product-body">
+
+                <h3>${esc(p.name)}</h3>
+
+                <p class="description">
+                    ${esc(
+                        p.description ||
+                        "No description provided."
+                    )}
+                </p>
+
+                <div class="price">
+                    ${esc(p.price)}
+                    ${esc(p.currency)}
+                </div>
+
+                <div class="seller">
+                    Seller:
+                    <b>${esc(p.seller)}</b>
+                </div>
+
+                <button
+                    class="full-button"
+                    onclick="viewProduct(${p.id})">
+                    View product
+                </button>
+
+            </div>
+        </article>
+    `;
+}
+
+function viewProduct(id) {
+    alert(
+        "Product #" +
+        id +
+        " selected."
+    );
+}
+
+function showAddProduct() {
+    setActive(2);
+
+    app.innerHTML = `
+
+        <div class="card form-card">
+
+            <h2>List your product</h2>
+
+            <p class="seller">
+                Your Telegram account will identify you.
+                You do not need to enter a vendor username.
+            </p>
+
+            <label for="productTitle">
+                Product name
+            </label>
+
+            <input
+                id="productTitle"
+                placeholder="What are you selling?">
+
+            <label for="productDescription">
+                Description
+            </label>
+
+            <textarea
+                id="productDescription"
+                placeholder="Describe your product or service..."></textarea>
+
+            <label for="productPrice">
+                Price
+            </label>
+
+            <input
+                id="productPrice"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="Enter price">
+
+            <label>
+                Currency
+            </label>
+
+            <div class="currency-wrap">
+
+                <input
+                    id="currencySearch"
+                    class="currency-search"
+                    placeholder="Search currency or code..."
+                    oninput="filterCurrencies()">
+
+                <select
+                    id="productCurrency"
+                    size="6">
+                </select>
+
+            </div>
+
+            <label>
+                Product picture
+            </label>
+
+            <div class="file-box">
+
+                <div>
+                    📷 Add product picture
+                </div>
+
+                <input
+                    id="productImage"
+                    type="file"
+                    accept="image/*"
+                    onchange="previewImage(event)">
+
+                <img
+                    id="imagePreview"
+                    class="preview"
+                    alt="Product preview">
+
+            </div>
+
+            <div id="createMessage"></div>
+
+            <div class="form-actions">
+
+                <button
+                    class="secondary"
+                    onclick="showProducts()">
+                    Cancel
+                </button>
+
+                <button
+                    class="primary"
+                    onclick="createProduct()">
+                    Publish product
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+    populateCurrencies();
+}
+
+const CURRENCIES = [
+    ["AED","United Arab Emirates Dirham"],
+    ["AFN","Afghan Afghani"],
+    ["ALL","Albanian Lek"],
+    ["AMD","Armenian Dram"],
+    ["ANG","Netherlands Antillean Guilder"],
+    ["AOA","Angolan Kwanza"],
+    ["ARS","Argentine Peso"],
+    ["AUD","Australian Dollar"],
+    ["AWG","Aruban Florin"],
+    ["AZN","Azerbaijani Manat"],
+    ["BAM","Bosnia-Herzegovina Convertible Mark"],
+    ["BBD","Barbadian Dollar"],
+    ["BDT","Bangladeshi Taka"],
+    ["BGN","Bulgarian Lev"],
+    ["BHD","Bahraini Dinar"],
+    ["BIF","Burundian Franc"],
+    ["BMD","Bermudian Dollar"],
+    ["BND","Brunei Dollar"],
+    ["BOB","Bolivian Boliviano"],
+    ["BRL","Brazilian Real"],
+    ["BSD","Bahamian Dollar"],
+    ["BTN","Bhutanese Ngultrum"],
+    ["BWP","Botswana Pula"],
+    ["BYN","Belarusian Ruble"],
+    ["BZD","Belize Dollar"],
+    ["CAD","Canadian Dollar"],
+    ["CDF","Congolese Franc"],
+    ["CHF","Swiss Franc"],
+    ["CLP","Chilean Peso"],
+    ["CNY","Chinese Yuan"],
+    ["COP","Colombian Peso"],
+    ["CRC","Costa Rican Colón"],
+    ["CUP","Cuban Peso"],
+    ["CVE","Cape Verdean Escudo"],
+    ["CZK","Czech Koruna"],
+    ["DJF","Djiboutian Franc"],
+    ["DKK","Danish Krone"],
+    ["DOP","Dominican Peso"],
+    ["DZD","Algerian Dinar"],
+    ["EGP","Egyptian Pound"],
+    ["ERN","Eritrean Nakfa"],
+    ["ETB","Ethiopian Birr"],
+    ["EUR","Euro"],
+    ["FJD","Fijian Dollar"],
+    ["FKP","Falkland Islands Pound"],
+    ["GBP","British Pound Sterling"],
+    ["GEL","Georgian Lari"],
+    ["GHS","Ghanaian Cedi"],
+    ["GIP","Gibraltar Pound"],
+    ["GMD","Gambian Dalasi"],
+    ["GNF","Guinean Franc"],
+    ["GTQ","Guatemalan Quetzal"],
+    ["GYD","Guyanese Dollar"],
+    ["HKD","Hong Kong Dollar"],
+    ["HNL","Honduran Lempira"],
+    ["HRK","Croatian Kuna"],
+    ["HTG","Haitian Gourde"],
+    ["HUF","Hungarian Forint"],
+    ["IDR","Indonesian Rupiah"],
+    ["ILS","Israeli New Shekel"],
+    ["INR","Indian Rupee"],
+    ["IQD","Iraqi Dinar"],
+    ["IRR","Iranian Rial"],
+    ["ISK","Icelandic Króna"],
+    ["JMD","Jamaican Dollar"],
+    ["JOD","Jordanian Dinar"],
+    ["JPY","Japanese Yen"],
+    ["KES","Kenyan Shilling"],
+    ["KGS","Kyrgyzstani Som"],
+    ["KHR","Cambodian Riel"],
+    ["KMF","Comorian Franc"],
+    ["KPW","North Korean Won"],
+    ["KRW","South Korean Won"],
+    ["KWD","Kuwaiti Dinar"],
+    ["KYD","Cayman Islands Dollar"],
+    ["KZT","Kazakhstani Tenge"],
+    ["LAK","Lao Kip"],
+    ["LBP","Lebanese Pound"],
+    ["LKR","Sri Lank
+
+
+
+
+an Rupee"],
+    ["LRD","Liberian Dollar"],
+    ["LSL","Lesotho Loti"],
+    ["LYD","Libyan Dinar"],
+    ["MAD","Moroccan Dirham"],
+    ["MDL","Moldovan Leu"],
+    ["MGA","Malagasy Ariary"],
+    ["MKD","Macedonian Denar"],
+    ["MMK","Myanmar Kyat"],
+    ["MNT","Mongolian Tögrög"],
+    ["MOP","Macanese Pataca"],
+    ["MRU","Mauritanian Ouguiya"],
+    ["MUR","Mauritian Rupee"],
+    ["MVR","Maldivian Rufiyaa"],
+    ["MWK","Malawian Kwacha"],
+    ["MXN","Mexican Peso"],
+    ["MYR","Malaysian Ringgit"],
+    ["MZN","Mozambican Metical"],
+    ["NAD","Namibian Dollar"],
+    ["NGN","Nigerian Naira"],
+    ["NIO","Nicaraguan Córdoba"],
+    ["NOK","Norwegian Krone"],
+    ["NPR","Nepalese Rupee"],
+    ["NZD","New Zealand Dollar"],
+    ["OMR","Omani Rial"],
+    ["PAB","Panamanian Balboa"],
+    ["PEN","Peruvian Sol"],
+    ["PGK","Papua New Guinean Kina"],
+    ["PHP","Philippine Peso"],
+    ["PKR","Pakistani Rupee"],
+    ["PLN","Polish Złoty"],
+    ["PYG","Paraguayan Guaraní"],
+    ["QAR","Qatari Riyal"],
+    ["RON","Romanian Leu"],
+    ["RSD","Serbian Dinar"],
+    ["RUB","Russian Ruble"],
+    ["RWF","Rwandan Franc"],
+    ["SAR","Saudi Riyal"],
+    ["SBD","Solomon Islands Dollar"],
+    ["SCR","Seychellois Rupee"],
+    ["SDG","Sudanese Pound"],
+    ["SEK","Swedish Krona"],
+    ["SGD","Singapore Dollar"],
+    ["SHP","Saint Helena Pound"],
+    ["SLE","Sierra Leonean Leone"],
+    ["SOS","Somali Shilling"],
+    ["SRD","Surinamese Dollar"],
+    ["SSP","South Sudanese Pound"],
+    ["STN","São Tomé & Príncipe Dobra"],
+    ["SVC","Salvadoran Colón"],
+    ["SYP","Syrian Pound"],
+    ["SZL","Eswatini Lilangeni"],
+    ["THB","Thai Baht"],
+    ["TJS","Tajikistani Somoni"],
+    ["TMT","Turkmenistani Manat"],
+    ["TND","Tunisian Dinar"],
+    ["TOP","Tongan Paʻanga"],
+    ["TRY","Turkish Lira"],
+    ["TTD","Trinidad & Tobago Dollar"],
+    ["TWD","New Taiwan Dollar"],
+    ["TZS","Tanzanian Shilling"],
+    ["UAH","Ukrainian Hryvnia"],
+    ["UGX","Ugandan Shilling"],
+    ["USD","United States Dollar"],
+    ["UYU","Uruguayan Peso"],
+    ["UZS","Uzbekistani Som"],
+    ["VES","Venezuelan Bolívar"],
+    ["VND","Vietnamese Đồng"],
+    ["VUV","Vanuatu Vatu"],
+    ["WST","Samoan Tala"],
+    ["XAF","Central African CFA Franc"],
+    ["XCD","East Caribbean Dollar"],
+    ["XOF","West African CFA Franc"],
+    ["XPF","CFP Franc"],
+    ["YER","Yemeni Rial"],
+    ["ZAR","South African Rand"],
+    ["ZMW","Zambian Kwacha"]
+];
+
+function populateCurrencies(filter = "") {
+    const select =
+        document.getElementById("productCurrency");
+
+    if (!select) return;
+
+    const q = filter.toLowerCase().trim();
+
+    const matches = CURRENCIES.filter(
+        ([code, name]) =>
+            !q ||
+            code.toLowerCase().includes(q) ||
+            name.toLowerCase().includes(q)
+    );
+
+    select.innerHTML = matches
+        .map(([code, name]) =>
+            `<option value="${code}">
+                ${code} — ${name}
+            </option>`
+        )
+        .join("");
+
+    if (matches.length > 0) {
+        select.value = matches[0][0];
+    }
+}
+
+function filterCurrencies() {
+    const input =
+        document.getElementById("currencySearch");
+
+    populateCurrencies(input.value);
+}
+
+function previewImage(event) {
+    const file = event.target.files[0];
+
+    const preview =
+        document.getElementById("imagePreview");
+
+    if (!file) {
+        preview.style.display = "none";
+        return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+        alert("Please select an image.");
+        event.target.value = "";
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = e => {
+        preview.src = e.target.result;
+        preview.style.display = "block";
+    };
+
+    reader.readAsDataURL(file);
+}
+
+async function createProduct() {
+    const title =
+        document.getElementById("productTitle")
+            .value.trim();
+
+    const description =
+        document.getElementById("productDescription")
+            .value.trim();
+
+    const price =
+        document.getElementById("productPrice")
+            .value.trim();
+
+    const currency =
+        document.getElementById("productCurrency")
+            .value;
+
+    const image =
+        document.getElementById("productImage")
+            .files[0];
+
+    const message =
+        document.getElementById("createMessage");
+
+    const telegramInitData = initData();
+
+    if (!telegramInitData) {
+        message.innerHTML = `
+            <div class="error">
+                Open this marketplace inside Telegram.
+            </div>`;
+        return;
+    }
+
+    if (!title || !price || !currency) {
+        message.innerHTML = `
+            <div class="error">
+                Product name, price and currency are required.
+            </div>`;
+        return;
+    }
+
+    const form = new FormData();
+
+    form.append("init_data", telegramInitData);
+    form.append("title", title);
+    form.append("description", description);
+    form.append("price", price);
+    form.append("currency", currency);
+
+    if (image) {
+        form.append("image", image);
+    }
+
+    message.innerHTML =
+        '<div class="loading">Publishing...</div>';
+
+    try {
+        const response =
+            await fetch(
+                "/miniapp/products/create/",
+                {
+                    method:"POST",
+                    body:form
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+            message.innerHTML = `
+                <div class="error">
+                    ${esc(
+                        data.error ||
+                        "Unable to publish product."
+                    )}
+                </div>`;
+            return;
+        }
+
+        message.innerHTML = `
+            <div style="
+                margin-top:12px;
+                padding:12px;
+                border-radius:12px;
+                background:#e9f9f0;
+                color:#137a47;
+                font-weight:700;">
+                ✓ Product published successfully.
+            </div>`;
+
+        setTimeout(showProducts, 900);
+
+    } catch (error) {
+        message.innerHTML = `
+            <div class="error">
+                Network error while publishing.
+            </div>`;
+    }
+}
+
+async function showOrders() {
+    setActive(1);
+
+    app.innerHTML =
+        '<div class="loading">Loading orders...</div>';
+
+    if (!tg || !tg.initDataUnsafe ||
+        !tg.initDataUnsafe.user) {
+
+        app.innerHTML = `
+            <div class="empty">
+                Open this marketplace inside Telegram
+                to view your orders.
+            </div>`;
+
+        return;
+    }
+
+    const username =
+        tg.initDataUnsafe.user.username;
+
+    if (!username) {
+        app.innerHTML = `
+            <div class="empty">
+                Your Telegram account needs a username
+                linked to the marketplace account.
+            </div>`;
+
+        return;
+    }
+
+    try {
+        const response =
+            await fetch(
+                "/miniapp/api/orders/?username=" +
+                encodeURIComponent(username)
+            );
+
+        const data =
+            await response.json();
+
+        if (!data.orders.length) {
+            app.innerHTML = `
+                <div class="empty">
+                    <div style="font-size:40px">📦</div>
+                    <h3>No orders yet</h3>
+                    <p>Your purchases will appear here.</p>
+                </div>`;
+
+            return;
+        }
+
+        app.innerHTML = `
+            <h2>My Orders</h2>
+
+            ${data.orders.map(order => `
+                <div class="card"
+                     style="padding:16px;margin-bottom:12px">
+
+                    <h3>
+                        Order #${esc(order.id)}
+                    </h3>
+
+                    <p>
+                        ${esc(order.product)}
+                    </p>
+
+                    <div class="price">
+                        ${esc(order.amount)}
+                        ${esc(order.currency)}
+                    </div>
+
+                    <span>
+                        ${esc(order.status)}
+                    </span>
+
+                </div>
+            `).join("")}
+        `;
+
+    } catch (error) {
+        app.innerHTML =
+            '<div class="error">Could not load orders.</div>';
+    }
+}
+
+showProducts();
+</script>
+
+</body>
+</html>
