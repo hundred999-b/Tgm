@@ -1,3 +1,4 @@
+import os
 """
 Django settings for config project.
 
@@ -136,4 +137,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = "/media/"
 MEDIA_ROOT = Path("/tmp/telegram_marketplace_media")
 
-TELEGRAM_BOT_TOKEN = "8764373539:AAFm0TJ73KET8uJ1ccrrF7lYFAOjRtD9HX0"
+TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
