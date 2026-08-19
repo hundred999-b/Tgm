@@ -140,3 +140,6 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = Path("/tmp/telegram_marketplace_media")
 
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+
+# Static files for production / Render
+STATIC_ROOT = BASE_DIR / "staticfiles"
