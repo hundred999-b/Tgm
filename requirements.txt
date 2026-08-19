@@ -3,3 +3,4 @@ djangorestframework>=3.16
 argon2-cffi>=25
 dj-database-url
 psycopg[binary]
+Pillow
