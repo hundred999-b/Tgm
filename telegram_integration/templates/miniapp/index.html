@@ -344,19 +344,19 @@ textarea {
 
 <div class="toolbar">
 
-    <button
+    <button type="button"
         class="nav-button active"
         onclick="showProducts()">
         Marketplace
     </button>
 
-    <button
+    <button type="button"
         class="nav-button"
         onclick="showOrders()">
         My Orders
     </button>
 
-    <button
+    <button type="button"
         class="nav-button"
         onclick="showAddProduct()">
         Sell
@@ -365,8 +365,13 @@ textarea {
 </div>
 
 <div id="app">
-    <div class="loading">
-        Loading marketplace...
+    <div class="empty">
+        <div style="font-size:40px">🛍️</div>
+        <h3>Marketplace</h3>
+        <p>Loading products...</p>
+        <button class="full-button" onclick="showProducts()">
+            Load marketplace
+        </button>
     </div>
 </div>
 
