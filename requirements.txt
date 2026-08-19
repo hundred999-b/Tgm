@@ -4,3 +4,4 @@ argon2-cffi>=25
 dj-database-url
 psycopg[binary]
 Pillow
+gunicorn
